@@ -10,7 +10,7 @@ class Manifest():
         self.manifest_path = kwargs.get("manifest_path", "manifests")
         self.uuid = str(uuid.uuid4())
 
-        #self.logo = 
+        self.logo = MediaBody(id = kwargs.get("logo", "https://univ-droit.fr/images/structures/universites/356/0350937d.jpg"))
 
         self.manifest = iiif_prezi3.Manifest(
             id = os.path.join(self.id_prefix, self.manifest_path, f"{self.uuid}.json"),
@@ -41,11 +41,14 @@ class MediaBody():
 
     def to_dict(self):
         ret = {}
-        for attr in self.__dict__:
-            if attr != "storage":
-                if getattr(self, attr) != None:
-                    ret[attr] = getattr(self, attr)
-        return ret
+        if self.id != None:
+            for attr in self.__dict__:
+                if attr != "storage":
+                    if getattr(self, attr) != None:
+                        ret[attr] = getattr(self, attr)
+            return ret
+        else:
+            return None
 
     def parse_storage(self):
         if self.id != None:
