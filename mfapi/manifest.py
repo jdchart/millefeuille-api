@@ -1,6 +1,7 @@
 import iiif_prezi3
 import os
 import uuid
+import pprint
 from.mediabody import MediaBody
 
 class Manifest():
@@ -9,7 +10,6 @@ class Manifest():
         self.__dict__["manifest_path"] = kwargs.get("manifest_path", "manifests")
         self.__dict__["uuid"] = str(uuid.uuid4())
 
-        # This will have to be added manually on export because prezzi blocks it (export to dict, then add to the dict).
         self.__dict__["logo"] = MediaBody(id = kwargs.get("logo", "https://univ-droit.fr/images/structures/universites/356/0350937d.jpg"))
 
         self.__dict__["manifest"] = iiif_prezi3.Manifest(
@@ -22,6 +22,9 @@ class Manifest():
         manifest_dict = self.manifest.dict()
         manifest_dict["logo"] = self.logo.to_dict()
         return manifest_dict
+    
+    def print(self):
+        pprint.pprint(self.to_dict())
 
     def add_metadata(self, label, value):
         if self.manifest.metadata != None:

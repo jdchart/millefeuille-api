@@ -13,4 +13,4 @@ manifest.add_metadata({"en" : ["Country"]}, {"en" : ["France"]})
 manifest.add_metadata({"en" : ["Date"]}, {"en" : ["2024"]})
 
 
-print(manifest.to_dict())
+print(manifest.print())
