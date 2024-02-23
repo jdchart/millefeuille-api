@@ -2,6 +2,7 @@ import iiif_prezi3
 import os
 import uuid
 import pprint
+import json
 from.mediabody import MediaBody
 
 class Manifest():
@@ -25,6 +26,12 @@ class Manifest():
     
     def print(self):
         pprint.pprint(self.to_dict())
+
+    def to_json(self):
+        json_data = self.to_dict()
+        with open(self.uuid + ".json", 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, ensure_ascii = False, indent = 2)
+        return self.uuid + ".json"
 
     def add_metadata(self, label, value):
         if self.manifest.metadata != None:
