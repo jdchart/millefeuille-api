@@ -22,6 +22,7 @@ class Manifest():
     def to_dict(self) -> dict:
         manifest_dict = self.manifest.dict()
         manifest_dict["logo"] = self.logo.to_dict()
+        manifest_dict["@context"] = "http://iiif.io/api/presentation/3/context.json"
         return manifest_dict
     
     def print(self):
