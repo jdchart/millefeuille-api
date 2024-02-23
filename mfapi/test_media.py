@@ -1,6 +1,6 @@
 from .manifest import MediaBody
 
-def test_media(path : str):
+def media_test(path : str):
     """
     Provide the url or a path to a media file and test if it can be accessed.
     
