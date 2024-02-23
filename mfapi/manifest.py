@@ -1,22 +1,61 @@
 import iiif_prezi3
 import os
 import uuid
-from .data import media_types
-from .utils import get_online_image_dims
+from.mediabody import MediaBody
 
 class Manifest():
     def __init__(self, **kwargs) -> None:
-        self.id_prefix = kwargs.get("id_prefix", "https://files.tetras-libre.fr/")
-        self.manifest_path = kwargs.get("manifest_path", "manifests")
-        self.uuid = str(uuid.uuid4())
+        self.__dict__["id_prefix"] = kwargs.get("id_prefix", "https://files.tetras-libre.fr/")
+        self.__dict__["manifest_path"] = kwargs.get("manifest_path", "manifests")
+        self.__dict__["uuid"] = str(uuid.uuid4())
 
-        self.logo = MediaBody(id = kwargs.get("logo", "https://univ-droit.fr/images/structures/universites/356/0350937d.jpg"))
+        # This will have to be added manually on export because prezzi blocks it (export to dict, then add to the dict).
+        self.__dict__["logo"] = MediaBody(id = kwargs.get("logo", "https://univ-droit.fr/images/structures/universites/356/0350937d.jpg"))
 
-        self.manifest = iiif_prezi3.Manifest(
+        self.__dict__["manifest"] = iiif_prezi3.Manifest(
             id = os.path.join(self.id_prefix, self.manifest_path, f"{self.uuid}.json"),
             label = kwargs.get("label", {"en" : ["Untitled Manifest"]}),
             rights = kwargs.get("rights", "https://creativecommons.org/licenses/by-nc-nd/4.0/")
         )
+
+    def to_dict(self) -> dict:
+        manifest_dict = self.manifest.dict()
+        manifest_dict["logo"] = self.logo.to_dict()
+        return manifest_dict
+
+    def add_metadata(self, label, value):
+        if self.manifest.metadata != None:
+            self.manifest.metadata.append({"label" : label, "value" : value})
+        else:
+            self.manifest.metadata = [{"label" : label, "value" : value}]
+
+    def add_canvas_from_media(self, media_url, **kwargs):
+        num_canvases = len(self.manifest.items)
+        canvas_path = os.path.join(self.id_prefix, self.manifest_path, "canvas", str(num_canvases + 1))
+        
+        media_body = MediaBody(id = media_url)
+
+        canvas = iiif_prezi3.Canvas(
+            id = canvas_path,
+            label = kwargs.get("label", {"en" : [os.path.basename(media_url)]})
+        )
+
+        if media_body.type == "Image" or media_body.type == "Video":
+            canvas.width = media_body.width
+            canvas.height = media_body.height
+
+        ap = iiif_prezi3.AnnotationPage(id = os.path.join(canvas_path, "page", "1"))
+        annotation_target = canvas_path + f"#xywh=0,0,{media_body.width},{media_body.height}"
+        an = iiif_prezi3.Annotation(
+            id = os.path.join(canvas_path, "page", "1", "1"),
+            target = annotation_target,
+            motivation = "painting",
+            body = media_body.to_dict()
+        )
+
+        ap.items.append(an)
+        canvas.items.append(ap)
+        self.manifest.items.append(canvas)
 
     def __getattr__(self, attr):
         if attr in self.manifest.__dict__ and attr not in self.__dict__:
@@ -24,82 +63,8 @@ class Manifest():
         else:
             return self.__getattr__(attr)
         
-    # def __setattr__(self, attr, value) -> None:
-    #     if attr in self.manifest.__dict__ and attr not in self.__dict__:
-    #         setattr(self.manifest, attr, value)
-    #     else:
-    #         super().__setattr__(self, attr, value)
-        
-class MediaBody():
-    def __init__(self, **kwargs) -> None:
-        self.__dict__["id"] = kwargs.get("id", None)
-        self.storage = self.parse_storage()
-        self.type = self.parse_type()
-        self.format = self.parse_format()
-        self.height, self.width = self.parse_dimensions()
-        self.duration = self.parse_duration()
-
-    def to_dict(self):
-        ret = {}
-        if self.id != None:
-            for attr in self.__dict__:
-                if attr != "storage":
-                    if getattr(self, attr) != None:
-                        ret[attr] = getattr(self, attr)
-            return ret
-        else:
-            return None
-
-    def parse_storage(self):
-        if self.id != None:
-            if self.id[:4] == "http":
-                return "online"
-            else:
-                return "local"
-        else:
-            return None
-
-    def parse_type(self):
-        if self.id != None:
-            ext = os.path.splitext(self.id)[1][1:]
-            for key in media_types:
-                if ext in media_types[key]:
-                    return key.capitalize()
-        else:
-            return None
-
-    def parse_format(self):
-        if self.id != None:
-            ext = os.path.splitext(self.id)[1][1:]
-            return f"{self.type.lower()}/{ext}"
-        else:
-            return None
-        
-    def parse_dimensions(self):
-        if self.type == "Image" or self.type == "Video":
-            if self.storage == "online":
-                if self.type == "Image":
-                    return get_online_image_dims(self.id)
-                elif self.type == "Video":
-                    return None
-            elif self.storage == "local":
-                if self.type == "Image":
-                    return None
-                elif self.type == "Video":
-                    return None
-        else:
-            return None, None
-    
-    def parse_duration(self):
-        return None
-    
     def __setattr__(self, attr, value) -> None:
-        if attr == "id":
-            super().__setattr__(attr, value)
-            self.storage = self.parse_storage()
-            self.type = self.parse_type()
-            self.format = self.parse_format()
-            self.height, self.width = self.parse_dimensions()
-            self.duration = self.parse_duration()
+        if attr in self.manifest.__dict__ and attr not in self.__dict__:
+            setattr(self.manifest, attr, value)
         else:
             super().__setattr__(attr, value)
