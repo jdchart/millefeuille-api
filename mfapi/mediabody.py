@@ -26,7 +26,7 @@ class MediaBody():
         if self.id != None:
             if self.id[:4] == "http":
                 if self.id[:46] == "https://filebrowser.tetras-libre.fr/files/www/":
-                    return "tetras"
+                    self.id = get_tetras_url(self.id)
                 return "online"
             else:
                 return "local"
@@ -54,12 +54,6 @@ class MediaBody():
             if self.storage == "online":
                 if self.type == "Image":
                     return get_online_image_dims(self.id)
-                elif self.type == "Video":
-                    return None
-            elif self.storage == "tetras":
-                url = get_tetras_url(self.id)
-                if self.type == "Image":
-                    return get_online_image_dims(url)
                 elif self.type == "Video":
                     return None
             elif self.storage == "local":
