@@ -15,9 +15,14 @@ class MediaBody():
         ret = {}
         if self.id != None:
             for attr in self.__dict__:
-                if attr != "storage":
+                if attr != "storage" and attr != "type":
                     if getattr(self, attr) != None:
                         ret[attr] = getattr(self, attr)
+                if attr == "type":
+                    if self.type == "Audio":
+                        ret["type"] = "Sound"
+                    else:
+                        ret["type"] = self.type
             return ret
         else:
             return None
