@@ -56,8 +56,32 @@ def get_online_audio_duration(url):
         
         audio = AudioSegment.from_file(dl_path)
         duration = len(audio) / 1000.0 
-        os.remove(dl_path)  
+        os.remove(dl_path)
         return duration
+    
+
+
+def online_img_to_np(url):
+    dl_path = os.path.join(os.getcwd(), "temp.jpg")
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(dl_path, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=1024):
+                file.write(chunk)
+        
+        # Taken from dvt (so that itll work with dvt...):
+        img = cv2.imread(_expand_path(dl_path))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        os.remove(dl_path)
+
+
+        return img
+
+
+def _expand_path(path: str) -> str:
+    path = os.path.abspath(os.path.expanduser(path))
+    return path
     
 
 # def get_online_duration(url):

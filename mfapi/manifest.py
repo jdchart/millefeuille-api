@@ -3,7 +3,18 @@ import os
 import uuid
 import pprint
 import json
+import requests
+from .utils import online_img_to_np
 from.mediabody import MediaBody
+
+def read_manifest(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        json_data = json.loads(response.text)
+        new_manifest = Manifest()
+        
+        new_manifest.manifest = iiif_prezi3.Manifest(**json_data)
+        return new_manifest
 
 class Manifest():
     def __init__(self, **kwargs) -> None:
@@ -25,6 +36,14 @@ class Manifest():
         manifest_dict["@context"] = "http://iiif.io/api/presentation/3/context.json"
         return manifest_dict
     
+    def get_media(self, canvas = 0):
+        return self.manifest.items[canvas].items[0].items[0].body
+    
+    def media_to_np(self, canvas = 0):
+        media_info = self.get_media(canvas)
+        if media_info.type == "Image":
+            return online_img_to_np(media_info.id)
+
     def print(self):
         pprint.pprint(self.to_dict())
 
