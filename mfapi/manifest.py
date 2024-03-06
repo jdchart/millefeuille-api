@@ -54,9 +54,18 @@ class Manifest():
         if media_body.type == "Image" or media_body.type == "Video":
             canvas.width = media_body.width
             canvas.height = media_body.height
+        if media_body.type == "Audio" or media_body.type == "Video":
+            canvas.duration = media_body.duration
 
         ap = iiif_prezi3.AnnotationPage(id = os.path.join(canvas_path, "page", "1"))
-        annotation_target = canvas_path + f"#xywh=0,0,{media_body.width},{media_body.height}"
+        
+        if media_body.type == "Image":
+            annotation_target = canvas_path + f"#xywh=0,0,{media_body.width},{media_body.height}"
+        elif media_body.type == "Video":
+            annotation_target = canvas_path + f"#xywh=0,0,{media_body.width},{media_body.height}&t=0,{media_body.duration}"
+        elif media_body.type == "Audio":
+            annotation_target = canvas_path + f"#t=0,{media_body.duration}"
+
         an = iiif_prezi3.Annotation(
             id = os.path.join(canvas_path, "page", "1", "1"),
             target = annotation_target,

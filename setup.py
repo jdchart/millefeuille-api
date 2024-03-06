@@ -8,7 +8,9 @@ A package to make generating content for Millefeuille easier.
 
 required = [
     "iiif-prezi3",
-    "Pillow"
+    "Pillow",
+    "opencv-python",
+    "pydub"
 ]
 
 setup(

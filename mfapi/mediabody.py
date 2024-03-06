@@ -1,5 +1,5 @@
 import os
-from .utils import get_online_image_dims, get_tetras_url
+from .utils import get_online_image_dims, get_tetras_url, get_online_video_dims, get_online_video_duration, get_online_audio_duration
 from .data import media_types
 
 class MediaBody():
@@ -55,7 +55,7 @@ class MediaBody():
                 if self.type == "Image":
                     return get_online_image_dims(self.id)
                 elif self.type == "Video":
-                    return None
+                    return get_online_video_dims(self.id)
             elif self.storage == "local":
                 if self.type == "Image":
                     return None
@@ -65,7 +65,19 @@ class MediaBody():
             return None, None
     
     def parse_duration(self):
-        return None
+        if self.type == "Audio" or self.type == "Video":
+            if self.storage == "online":
+                if self.type == "Audio":
+                    return get_online_audio_duration(self.id)
+                if self.type == "Video":
+                    return get_online_video_duration(self.id)
+            elif self.storage == "local":
+                if self.type == "Audio":
+                    return None
+                if self.type == "Video":
+                    return None
+        else:
+            return None
     
     def __setattr__(self, attr, value) -> None:
         if attr == "id":
