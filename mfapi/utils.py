@@ -13,7 +13,7 @@ def get_temp_file(file_ext, file_name = None):
     full_path = os.path.join(os.getcwd(), "temp", f"{file_name}.{file_ext}")
     if os.path.isdir(os.path.dirname(full_path)) == False:
         os.makedirs(os.path.dirname(full_path))
-    return file_name
+    return full_path
 
 def clean_up():
     if os.path.isdir(os.path.join(os.getcwd(), "temp")):
