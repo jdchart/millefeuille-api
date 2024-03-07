@@ -4,7 +4,7 @@ import uuid
 import pprint
 import json
 import requests
-from .utils import online_img_to_np
+from .utils import online_img_to_np, get_temp_file
 from.mediabody import MediaBody
 
 def read_manifest(url):
@@ -49,9 +49,10 @@ class Manifest():
 
     def to_json(self):
         json_data = self.to_dict()
-        with open(self.uuid + ".json", 'w', encoding='utf-8') as f:
+        temp_path = get_temp_file("json", self.uuid)
+        with open(temp_path, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, ensure_ascii = False, indent = 2)
-        return self.uuid + ".json"
+        return temp_path
 
     def add_metadata(self, label, value):
         if self.manifest.metadata != None:

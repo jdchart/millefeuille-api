@@ -4,6 +4,20 @@ from PIL import Image
 from io import BytesIO
 import cv2
 from pydub import AudioSegment
+import uuid
+import shutil
+
+def get_temp_file(file_ext, file_name = None):
+    if file_name == None:
+        file_name = str(uuid.uuid4())
+    full_path = os.path.join(os.getcwd(), "temp", f"{file_name}.{file_ext}")
+    if os.path.isdir(os.path.dirname(full_path)) == False:
+        os.makedirs(os.path.dirname(full_path))
+    return file_name
+
+def clean_up():
+    if os.path.isdir(os.path.join(os.getcwd(), "temp")):
+        shutil.rmtree(os.path.join(os.getcwd(), "temp"))
 
 def get_tetras_url(url):
     prefix = "https://files.tetras-libre.fr/"
@@ -26,16 +40,16 @@ def dl_range(url, range, path):
                 file.write(chunk)
 
 def get_online_video_dims(url):
-    dl_path = os.path.join(os.getcwd(), "temp.mp4")
+    dl_path = get_temp_file("mp4")
     dl_range(url, "0-5242880", dl_path)
     vid = cv2.VideoCapture(dl_path)
     width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    os.remove(dl_path)
+    clean_up()
     return width, height
 
 def get_online_video_duration(url):
-    dl_path = os.path.join(os.getcwd(), "temp.mp4")
+    dl_path = get_temp_file("mp4")
     dl_range(url, "0-5242880", dl_path)
     vid = cv2.VideoCapture(dl_path)
     
@@ -43,11 +57,11 @@ def get_online_video_duration(url):
     fps = vid.get(cv2.CAP_PROP_FPS)
     duration = num_frames / fps
 
-    os.remove(dl_path)
+    clean_up()
     return duration
 
 def get_online_audio_duration(url):
-    dl_path = os.path.join(os.getcwd(), "temp.mp3")
+    dl_path = get_temp_file("mp3")
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         with open(dl_path, 'wb') as file:
@@ -56,52 +70,24 @@ def get_online_audio_duration(url):
         
         audio = AudioSegment.from_file(dl_path)
         duration = len(audio) / 1000.0 
-        os.remove(dl_path)
+        clean_up()
         return duration
     
-
-
 def online_img_to_np(url):
-    dl_path = os.path.join(os.getcwd(), "temp.jpg")
+    dl_path = get_temp_file("jpg")
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         with open(dl_path, 'wb') as file:
             for chunk in response.iter_content(chunk_size=1024):
                 file.write(chunk)
         
-        # Taken from dvt (so that itll work with dvt...):
+        # Taken from dvt (so that it'll work with dvt...):
         img = cv2.imread(_expand_path(dl_path))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        os.remove(dl_path)
-
-
+        clean_up()
         return img
-
 
 def _expand_path(path: str) -> str:
     path = os.path.abspath(os.path.expanduser(path))
     return path
-    
-
-# def get_online_duration(url):
-#     response = requests.head(url)
-#     if response.status_code == 200:
-#         # Get the content length and content range from the headers
-#         content_length = response.headers.get('Content-Length')
-#         content_range = response.headers.get('Content-Range')
-
-#         # Parse the content range to get the file size
-#         if content_range:
-#             file_size = int(content_range.split('/')[-1])
-#         elif content_length:
-#             file_size = int(content_length)
-#         else:
-#             raise Exception("Unable to determine file size.")
-
-#         # Calculate duration based on assumptions about the file format
-#         # Adjust this based on the actual file format you are working with
-#         assumed_bitrate = 128  # Adjust this based on your assumptions about the bitrate
-#         duration = file_size / (assumed_bitrate * 1024 / 8)  # in seconds
-
-#         return duration
