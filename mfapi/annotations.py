@@ -15,7 +15,13 @@ class AnnotationPage():
     def to_dict(self):
         ret = {
             "id" : self.id,
-            "items" : []
+            "items" : [],
+            "type": "AnnotationPage",
+            "label": None,
+            "context": None,
+            "rendering": None,
+            "service": None,
+            "thumbnail": None,
         }
         for item in self.items:
             ret["items"].append(item.to_dict())
@@ -44,6 +50,10 @@ class Annotation():
             "target" : self.target,
             "motivation" : "commenting",
             "type": "Annotation",
+            "label": None,
+            "service": None,
+            "rendering": None,
+            "thumbnail": None,
             "body" : {
                 "value" : self.label,
                 "type" : "Image",
