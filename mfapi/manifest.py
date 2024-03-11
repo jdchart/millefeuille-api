@@ -6,6 +6,7 @@ import json
 import requests
 from .utils import online_img_to_np, get_temp_file
 from.mediabody import MediaBody
+from .annotations import AnnotationPage
 
 def read_manifest(url):
     response = requests.get(url)
@@ -30,10 +31,27 @@ class Manifest():
             rights = kwargs.get("rights", "https://creativecommons.org/licenses/by-nc-nd/4.0/")
         )
 
+        self.__dict__["annotation_pages"] = []
+
+    def add_annotation_page(self, canvas = 0):
+        can = self.manifest.items[canvas]
+        ret = AnnotationPage(can)
+
+        self.annotation_pages.append({
+            "canvas" : canvas,
+            "annotation_page" : ret
+        })
+        
+        return ret
+
     def to_dict(self) -> dict:
         manifest_dict = self.manifest.dict()
         manifest_dict["logo"] = self.logo.to_dict()
         manifest_dict["@context"] = "http://iiif.io/api/presentation/3/context.json"
+
+        for ap in self.annotation_pages:
+            manifest_dict["items"][ap["canvas"]]["annotations"] = ap["annotation_page"].to_dict()
+
         return manifest_dict
     
     def get_media(self, canvas = 0):
@@ -108,3 +126,4 @@ class Manifest():
             setattr(self.manifest, attr, value)
         else:
             super().__setattr__(attr, value)
+
