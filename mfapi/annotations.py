@@ -1,8 +1,9 @@
 import os
 
 class AnnotationPage():
-    def __init__(self, canvas) -> None:
+    def __init__(self, canvas, manifest) -> None:
         self.canvas = canvas
+        self.manifest = manifest
         self.items = []
         self.id = os.path.join(self.canvas.id, "annotation", "1")
 
@@ -42,11 +43,12 @@ class Annotation():
             "id" : self.id,
             "target" : self.target,
             "motivation" : "commenting",
+            "type": "Annotation",
             "body" : {
                 "value" : self.label,
                 "type" : "Image",
                 "format" : "image/jpg",
-                "id" : self.annotation_page.canvas.id
+                "id" : self.annotation_page.manifest.id
             }
         }
 

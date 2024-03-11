@@ -35,13 +35,13 @@ class Manifest():
 
     def add_annotation_page(self, canvas = 0):
         can = self.manifest.items[canvas]
-        ret = AnnotationPage(can)
+        ret = AnnotationPage(can, self.manifest)
 
         self.annotation_pages.append({
             "canvas" : canvas,
             "annotation_page" : ret
         })
-        
+
         return ret
 
     def to_dict(self) -> dict:
