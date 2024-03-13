@@ -31,6 +31,12 @@ def get_online_image_dims(url):
     width, height = img.size
     return width, height
 
+def dl_all(url, path):
+    response = requests.get(url, stream=True)
+    if response.status_code == 206 or response.status_code == 200:
+        with open(path, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=1024):
+                file.write(chunk)
 
 def dl_range(url, range, path):
     response = requests.get(url, headers={'Range': f'bytes={range}'}, stream=True)
@@ -41,25 +47,70 @@ def dl_range(url, range, path):
 
 def get_online_video_dims(url):
     dl_path = get_temp_file("mp4", None, "temp_media")
-    dl_range(url, "0-5242880", dl_path)
-    vid = cv2.VideoCapture(dl_path)
-    width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    clean_up("temp_media")
-    return width, height
+    
+    try:
+        dl_range(url, "0-5242880", dl_path)
+        vid = cv2.VideoCapture(dl_path)
+        width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        if width < 1 or height < 1:
+            raise Exception("Width or height was smaller than 1.")
+
+        clean_up("temp_media")
+        return width, height
+    except:
+        print("Unable to retrive video data from beginning of file, downloading whole file...")
+        dl_all(url, dl_path)
+        vid = cv2.VideoCapture(dl_path)
+        width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        # print(f"WIDTH: {width}" )
+        # print(f"HEIGHT: {height}" )
+
+        clean_up("temp_media")
+        return width, height
 
 def get_online_video_duration(url):
     # TODO make it try different download ranges until it is successful
     dl_path = get_temp_file("mp4", None, "temp_media")
-    dl_range(url, "0-100242880", dl_path)
-    vid = cv2.VideoCapture(dl_path)
-    
-    num_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = vid.get(cv2.CAP_PROP_FPS)
-    duration = num_frames / fps
 
-    clean_up("temp_media")
-    return duration
+    # #dl_range(url, "0-5242880", dl_path)
+    # dl_all(url, dl_path)
+    # vid = cv2.VideoCapture(dl_path)
+    
+    # num_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
+    # print(f"NUMM FRAMES: {num_frames}")
+    # fps = vid.get(cv2.CAP_PROP_FPS)
+    # print(f"FPS: {fps}")
+    # duration = num_frames / fps
+
+    # clean_up("temp_media")
+    # return duration
+    
+    try:
+        dl_range(url, "0-5242880", dl_path)
+        vid = cv2.VideoCapture(dl_path)
+        
+        num_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
+        fps = vid.get(cv2.CAP_PROP_FPS)
+        duration = num_frames / fps
+
+        clean_up("temp_media")
+        return duration
+    except:
+        print("Unable to retrive video data from beginning of file, downloading whole file...")
+        dl_all(url, dl_path)
+        vid = cv2.VideoCapture(dl_path)
+        
+        num_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
+        fps = vid.get(cv2.CAP_PROP_FPS)
+        duration = num_frames / fps
+
+        clean_up("temp_media")
+        return duration
+
 
 def get_online_audio_duration(url):
     dl_path = get_temp_file("mp3", None, "temp_media")

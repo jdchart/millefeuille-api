@@ -11,6 +11,8 @@ class MediaBody():
         self.height, self.width = self.parse_dimensions()
         self.duration = self.parse_duration()
 
+        #print(self.to_dict())
+
     def to_dict(self):
         ret = {}
         if self.id != None:
