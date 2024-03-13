@@ -51,7 +51,7 @@ def get_online_video_dims(url):
 def get_online_video_duration(url):
     # TODO make it try different download ranges until it is successful
     dl_path = get_temp_file("mp4", None, "temp_media")
-    dl_range(url, "0-10242880", dl_path)
+    dl_range(url, "0-100242880", dl_path)
     vid = cv2.VideoCapture(dl_path)
     
     num_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
