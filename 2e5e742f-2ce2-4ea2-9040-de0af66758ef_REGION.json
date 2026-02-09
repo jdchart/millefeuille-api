@@ -1,0 +1,257 @@
+{
+    "id": "https://files.tetras-libre.fr/manifests/plozevet/sources/2e5e742f-2ce2-4ea2-9040-de0af66758ef_REGION.json",
+    "type": "Manifest",
+    "label": {
+      "en": [
+        "Au bourg REGION"
+      ]
+    },
+    "context": null,
+    "metadata": [
+      {
+        "label": {
+          "en": [
+            "Titre"
+          ]
+        },
+        "value": {
+          "en": [
+            "Au bourg"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Date"
+          ]
+        },
+        "value": {
+          "en": [
+            "1966"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Réalisateurs"
+          ]
+        },
+        "value": {
+          "en": [
+            "['Robert GESSAIN', 'Monique GESSAIN']"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Genre"
+          ]
+        },
+        "value": {
+          "en": [
+            "Documentaire"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Durée"
+          ]
+        },
+        "value": {
+          "en": [
+            "00:50:00"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Coloration"
+          ]
+        },
+        "value": {
+          "en": [
+            "Couleur"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Format durée"
+          ]
+        },
+        "value": {
+          "en": [
+            "MM - Moyen métrage"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Format original"
+          ]
+        },
+        "value": {
+          "en": [
+            "Film 16mm"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Son"
+          ]
+        },
+        "value": {
+          "en": [
+            "Sonore"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Descripteurs"
+          ]
+        },
+        "value": {
+          "en": [
+            "['Ethnologie', 'Funérailles', 'Boulanger', 'Marché', 'Métier du commerce', 'Vie quotidienne', 'Plozévet (29)', 'Pont-Croix (29)']"
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Résumé"
+          ]
+        },
+        "value": {
+          "en": [
+            "Tourné lors de l'enquête multidisciplinaire à Plozévet effectuée par le centre de recherche anthropologique du Musée de l'Homme entre 1961 et 1965, le film nous permet de découvrir les activités quotidiennes des gens du village. Enterrement, baptême, noces ainsi que les retraités de Saint-Demet. Le conseil municipal, la foire de Pont-Croix (achats de porcs), le bétail à l'abattoir, les magasins, le marché de Saint-Demet, la fabrication de meubles bretons (menuiserie), la conserverie (poissons, légumes), la messe, les match de football, les parties de boules, de palets et de quilles. La célébration des fêtes de la Toussaint, la mairie, la population du bourg, le remembrement, les travaux agricoles, la scolarisation, l'enseignement (école de filles), la kermesse communale de l'amicale laïque. Autant d'éléments du quotidien collectés et étudiés pour rendre compte de la vie des habitants."
+          ]
+        }
+      },
+      {
+        "label": {
+          "en": [
+            "Index"
+          ]
+        },
+        "value": {
+          "en": [
+            "134"
+          ]
+        }
+      }
+    ],
+    "summary": null,
+    "requiredStatement": {
+      "label": {
+        "en": [
+          "Attribution"
+        ]
+      },
+      "value": {
+        "en": [
+          "Cinématèque de Bretagne"
+        ]
+      }
+    },
+    "rendering": null,
+    "service": null,
+    "services": null,
+    "viewingDirection": null,
+    "placeholderCanvas": null,
+    "accompanyingCanvas": null,
+    "rights": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "start": null,
+    "navDate": null,
+    "navPlace": null,
+    "provider": [
+      {
+        "id": "https://www.cinematheque-bretagne.bzh/",
+        "type": "Agent",
+        "label": {
+          "en": [
+            "Cinématèque de Bretagne"
+          ]
+        },
+        "homepage": [
+          {
+            "id": "https://www.cinematheque-bretagne.bzh/",
+            "type": "Text",
+            "label": {
+              "en": [
+                "Cinématèque de Bretagne"
+              ]
+            },
+            "format": "text/html",
+            "language": null
+          }
+        ],
+        "logo": null,
+        "seeAlso": null
+      }
+    ],
+    "seeAlso": null,
+    "thumbnail": null,
+    "homepage": null,
+    "behavior": null,
+    "partOf": null,
+    "items": [
+      {
+        "id": "https://files.tetras-libre.fr/manifests/plozevet/sources/canvas/1",
+        "type": "Canvas",
+        "label": {
+          "en": [
+            "134.mp4"
+          ]
+        },
+        "height": 720,
+        "width": 574,
+        "duration": 10.0,
+        "items": [
+          {
+            "id": "https://files.tetras-libre.fr/manifests/plozevet/sources/canvas/1/page/1",
+            "type": "AnnotationPage",
+            "items": [
+              {
+                "id": "https://files.tetras-libre.fr/manifests/plozevet/sources/canvas/1/page/1/1",
+                "type": "Annotation",
+                "motivation": "painting",
+                "body": {
+                  "id": "https://files.tetras-libre.fr/media/plozevet/fonds_gessain/134.mp4",
+                  "type": "Video",
+                  "height": 720,
+                  "width": 574,
+                  "duration": 2986.08,
+                  "format": "video/mp4"
+                },
+                "target": "https://files.tetras-libre.fr/manifests/plozevet/sources/canvas/1#xywh=0,0,574,720&t=0.0,10.0"
+              }
+            ]
+          }
+        ],
+        "annotations": null
+      }
+    ],
+    "structures": null,
+    "annotations": null,
+    "logo": {
+      "id": "https://mediatheque.landerneau.bzh/medias/sites/3/2019/12/logo_CDB_1.jpg",
+      "type": "Image",
+      "format": "image/jpg",
+      "height": 960,
+      "width": 722
+    },
+    "@context": "http://iiif.io/api/presentation/3/context.json"
+  }

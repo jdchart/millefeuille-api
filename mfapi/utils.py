@@ -6,6 +6,7 @@ import cv2
 from pydub import AudioSegment
 import uuid
 import shutil
+import numpy as np
 
 def get_temp_file(file_ext, file_name = None, folder_name = "temp"):
     if file_name == None:
@@ -120,6 +121,33 @@ def online_img_to_np(url):
 
         clean_up("temp_media")
         return img
+    
+def online_video_to_np(url, **kwargs):
+    dl_path = get_temp_file("mp4", None, "temp_media")
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(dl_path, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=1024):
+                file.write(chunk)
+
+        if "width" in kwargs and "height" in kwargs:
+            # Taken from dvt:
+            vinput = cv2.VideoCapture(_expand_path(dl_path))
+            N = int(vinput.get(cv2.CAP_PROP_FRAME_COUNT))
+            video = np.zeros((N, kwargs.get("height"), kwargs.get("width"), 3), dtype=np.uint8)
+
+            inum = 0
+            while True:
+                status, img = vinput.read()
+                if not status:
+                    break
+                frame = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                frame = cv2.resize(frame, (kwargs.get("width"), kwargs.get("height")))
+                video[inum] = frame
+                inum += 1
+
+            clean_up("temp_media")
+            return video
 
 def _expand_path(path: str) -> str:
     path = os.path.abspath(os.path.expanduser(path))

@@ -4,7 +4,7 @@ import uuid
 import pprint
 import json
 import requests
-from .utils import online_img_to_np, get_temp_file
+from .utils import online_img_to_np, get_temp_file, online_video_to_np
 from.mediabody import MediaBody
 from .annotations import AnnotationPage
 
@@ -57,10 +57,12 @@ class Manifest():
     def get_media(self, canvas = 0):
         return self.manifest.items[canvas].items[0].items[0].body
     
-    def media_to_np(self, canvas = 0):
+    def media_to_np(self, canvas = 0, **kwargs):
         media_info = self.get_media(canvas)
         if media_info.type == "Image":
             return online_img_to_np(media_info.id)
+        if media_info.type == "Video":
+            return online_video_to_np(media_info.id, **kwargs)
 
     def print(self):
         pprint.pprint(self.to_dict())
@@ -114,6 +116,19 @@ class Manifest():
         ap.items.append(an)
         canvas.items.append(ap)
         self.manifest.items.append(canvas)
+
+    def add_canvas_from_media_region(self, media_url, **kwargs):
+        """
+        Add a canvas manually without having to download media content.
+        """
+        num_canvases = len(self.manifest.items)
+        canvas_path = os.path.join(self.id_prefix, self.manifest_path, "canvas", str(num_canvases + 1))
+        canvas = iiif_prezi3.Canvas(
+            id = canvas_path,
+            label = kwargs.get("label", {"en" : [os.path.basename(media_url)]})
+        )
+        
+
 
     def __getattr__(self, attr):
         if attr in self.manifest.__dict__ and attr not in self.__dict__:

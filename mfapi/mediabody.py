@@ -8,6 +8,8 @@ class MediaBody():
         self.storage = self.parse_storage()
         self.type = self.parse_type()
         self.format = self.parse_format()
+        
+        
         self.height, self.width = self.parse_dimensions()
         self.duration = self.parse_duration()
 
